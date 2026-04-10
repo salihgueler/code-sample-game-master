@@ -1,0 +1,32 @@
+{
+  "_default": {
+    "1": {
+      "character_id": "77c65bb3-987c-49f2-ba18-972585428439",
+      "name": "Salih",
+      "character_class": "Paladin",
+      "race": "Elf",
+      "gender": "Male",
+      "level": 1,
+      "experience": 0,
+      "stats": {
+        "strength": 15,
+        "dexterity": 14,
+        "constitution": 13,
+        "intelligence": 11,
+        "wisdom": 17,
+        "charisma": 16
+      },
+      "inventory": [
+        {
+          "item_name": "Starting Equipment Pack",
+          "quantity": 1
+        },
+        {
+          "item_name": "Gold Pieces",
+          "quantity": 100
+        }
+      ],
+      "created_at": "2026-04-10T05:15:15.145Z"
+    }
+  }
+}
