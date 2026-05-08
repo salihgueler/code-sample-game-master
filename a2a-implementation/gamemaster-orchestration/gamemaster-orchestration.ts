@@ -1,4 +1,5 @@
 import { Agent, McpClient, tool } from "@strands-agents/sdk";
+import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import { A2AAgent } from "@strands-agents/sdk/a2a";
 import express from "express";
 import cors from "cors";
@@ -84,6 +85,9 @@ const askCharacterAgent = tool({
 
 // TODO: Create the gamemaster agent with A2A tool wrappers and MCP tools
 const agent = new Agent({
+  model: new BedrockModel({
+    modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+  }),
   tools: [askRulesAgent, askCharacterAgent, mcpClient],
   systemPrompt: SYSTEM_PROMPT,
 });

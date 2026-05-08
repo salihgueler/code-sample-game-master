@@ -1,4 +1,5 @@
 import { Agent, tool } from "@strands-agents/sdk";
+import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import { A2AExpressServer } from "@strands-agents/sdk/a2a/express";
 import z from "zod";
 import * as path from "path";
@@ -92,6 +93,9 @@ const SYSTEM_PROMPT = `You are a D&D rules expert. When asked about rules, use t
 then provide a clear, concise answer with the page reference. Keep responses brief and focused on the specific rule requested.`;
 
 const agent = new Agent({
+  model: new BedrockModel({
+    modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+  }),
   tools: [queryDndRules],
   systemPrompt: SYSTEM_PROMPT,
 });
