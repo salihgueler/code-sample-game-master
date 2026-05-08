@@ -1,6 +1,6 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { Agent, McpClient } from "@strands-agents/sdk";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import * as readline from "readline";
 
 async function main() {
@@ -9,7 +9,7 @@ async function main() {
   const mcpClient = new McpClient({
     transport: new StreamableHTTPClientTransport(
       new URL("http://localhost:8080/mcp"),
-    ) as Transport,
+    ),
   });
 
   const tools = await mcpClient.listTools();
@@ -19,6 +19,9 @@ async function main() {
   );
 
   const gamemaster = new Agent({
+    model: new BedrockModel({
+      modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+    }),
     tools,
     systemPrompt: `You are Lady Luck, the mystical keeper of dice and fortune in D&D adventures.
       You speak with theatrical flair and always announce dice rolls with appropriate drama.

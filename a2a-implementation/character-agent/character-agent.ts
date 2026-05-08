@@ -1,4 +1,5 @@
 import { Agent, tool } from "@strands-agents/sdk";
+import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import { A2AExpressServer } from "@strands-agents/sdk/a2a/express";
 import z from "zod";
 import * as fs from "fs";
@@ -174,6 +175,9 @@ helpful summaries when characters are found. Keep responses focused and include 
 
 const agent = new Agent({
   // TODO: Configure the Character Agent with:
+  model: new BedrockModel({
+    modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+  }),
   tools: [findCharacterByName, listAllCharacters, createCharacter],
   // - systemPrompt: SYSTEM_PROMPT
   systemPrompt: SYSTEM_PROMPT,
