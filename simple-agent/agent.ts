@@ -1,4 +1,4 @@
-import { Agent, BedrockModel } from "@strands-agents/sdk";
+import { Agent } from "@strands-agents/sdk";
 
 const agent = new Agent({
   systemPrompt:
