@@ -3,7 +3,6 @@ import { A2AAgent } from "@strands-agents/sdk/a2a";
 import express from "express";
 import cors from "cors";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import z from "zod";
 
 const app = express();
@@ -19,7 +18,7 @@ app.get("/health", (_req, res) => {
 const mcpClient = new McpClient({
   transport: new StreamableHTTPClientTransport(
     new URL("http://localhost:8080/mcp"),
-  ) as Transport,
+  ),
 });
 
 // System prompt for the agent

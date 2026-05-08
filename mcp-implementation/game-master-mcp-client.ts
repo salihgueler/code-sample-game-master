@@ -1,6 +1,5 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { Agent, McpClient } from "@strands-agents/sdk";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import * as readline from "readline";
 
 async function main() {
@@ -9,7 +8,7 @@ async function main() {
   const mcpClient = new McpClient({
     transport: new StreamableHTTPClientTransport(
       new URL("http://localhost:8080/mcp"),
-    ) as Transport,
+    ),
   });
 
   const tools = await mcpClient.listTools();
