@@ -173,18 +173,20 @@ method: roll 4d6 and drop the lowest die for each of the six abilities (Strength
 Use the appropriate tools to create, find, or list characters as requested. Provide clear confirmations when characters are created and
 helpful summaries when characters are found. Keep responses focused and include relevant character details like class, race, and key stats.`;
 
-const agent = new Agent({
-  // TODO: Configure the Character Agent with:
-  model: new BedrockModel({
-    modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
-  }),
-  tools: [findCharacterByName, listAllCharacters, createCharacter],
-  // - systemPrompt: SYSTEM_PROMPT
-  systemPrompt: SYSTEM_PROMPT,
-});
+// One agent per A2A context, so separate conversations never share state.
+const createAgent = () =>
+  new Agent({
+    // TODO: Configure the Character Agent with:
+    model: new BedrockModel({
+      modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+    }),
+    tools: [findCharacterByName, listAllCharacters, createCharacter],
+    // - systemPrompt: SYSTEM_PROMPT
+    systemPrompt: SYSTEM_PROMPT,
+  });
 
 const server = new A2AExpressServer({
-  agent,
+  agentFactory: createAgent,
   name: "Character Creator Agent",
   description: DESCRIPTION,
   port: 8001,
