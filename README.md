@@ -23,6 +23,8 @@ Each folder demonstrates a progressively more advanced agentic pattern — from 
 └── sample-once-upon-agentic-ai-typescript-frontend/  # 5. React + Vite frontend
 ```
 
+Each numbered folder has its own `README.md` explaining the pattern and how to run it: [simple-agent](simple-agent/README.md), [using-tools](using-tools/README.md), [mcp-implementation](mcp-implementation/README.md), [a2a-implementation](a2a-implementation/README.md), [frontend](sample-once-upon-agentic-ai-typescript-frontend/README.md).
+
 ## Prerequisites
 
 - Node.js 18+
