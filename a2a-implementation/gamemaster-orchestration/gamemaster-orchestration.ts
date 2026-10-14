@@ -6,6 +6,21 @@ import cors from "cors";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import z from "zod";
 
+// --- Local model with Ollama (uncomment to use) ---
+// Run `ollama serve` and `ollama pull llama3.1` first. See README.
+// Note: this orchestrator demands strict JSON-only output, so a larger
+// local model follows the instructions more reliably than an 8B one.
+// import { OpenAIModel } from "@strands-agents/sdk/models/openai";
+//
+// const ollamaModel = new OpenAIModel({
+//   api: "chat",
+//   modelId: "llama3.1",
+//   apiKey: "ollama", // any non-empty string; Ollama ignores it
+//   clientConfig: { baseURL: "http://localhost:11434/v1" },
+// });
+// Then pass `model: ollamaModel` to the gamemaster Agent below.
+// ---------------------------------------------------
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -88,6 +103,7 @@ const agent = new Agent({
   model: new BedrockModel({
     modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
   }),
+  // model: ollamaModel, // <- use this instead to run locally with Ollama
   tools: [askRulesAgent, askCharacterAgent, mcpClient],
   systemPrompt: SYSTEM_PROMPT,
 });

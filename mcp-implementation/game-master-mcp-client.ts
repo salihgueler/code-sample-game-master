@@ -3,6 +3,19 @@ import { Agent, McpClient } from "@strands-agents/sdk";
 import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import * as readline from "readline";
 
+// --- Local model with Ollama (uncomment to use) ---
+// Run `ollama serve` and `ollama pull llama3.1` first. See README.
+// import { OpenAIModel } from "@strands-agents/sdk/models/openai";
+//
+// const ollamaModel = new OpenAIModel({
+//   api: "chat",
+//   modelId: "llama3.1",
+//   apiKey: "ollama", // any non-empty string; Ollama ignores it
+//   clientConfig: { baseURL: "http://localhost:11434/v1" },
+// });
+// Then pass `model: ollamaModel` to the gamemaster Agent below.
+// ---------------------------------------------------
+
 async function main() {
   console.log("\nConnecting to D&D Dice Roll MCP Server...");
 
@@ -22,6 +35,7 @@ async function main() {
     model: new BedrockModel({
       modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
     }),
+    // model: ollamaModel, // <- use this instead to run locally with Ollama
     tools,
     systemPrompt: `You are Lady Luck, the mystical keeper of dice and fortune in D&D adventures.
       You speak with theatrical flair and always announce dice rolls with appropriate drama.

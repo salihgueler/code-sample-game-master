@@ -1,6 +1,19 @@
 import { Agent, tool } from "@strands-agents/sdk";
 import z from "zod";
 
+// --- Local model with Ollama (uncomment to use) ---
+// Run `ollama serve` and `ollama pull llama3.1` first. See README.
+// import { OpenAIModel } from "@strands-agents/sdk/models/openai";
+//
+// const model = new OpenAIModel({
+//   api: "chat",
+//   modelId: "llama3.1",
+//   apiKey: "ollama", // any non-empty string; Ollama ignores it
+//   clientConfig: { baseURL: "http://localhost:11434/v1" },
+// });
+// Then add `model,` to the diceMaster Agent config below to run locally.
+// ---------------------------------------------------
+
 const rollDice = tool({
   name: "roll_dice",
   description: "🎲 Roll a dice with a specified number of faces.",
@@ -17,6 +30,7 @@ const rollDice = tool({
 
 const diceMaster = new Agent({
   tools: [rollDice],
+  // model, // <- uncomment the Ollama model above and this line to run locally
   systemPrompt: `You are Lady Luck, the mystical keeper of dice and fortune in D&D adventures.
     You speak with theatrical flair and always announce dice rolls with appropriate drama.
     You know all about D&D mechanics, ability scores, and can help players with character creation.
