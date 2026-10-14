@@ -26,13 +26,75 @@ Each folder demonstrates a progressively more advanced agentic pattern — from 
 ## Prerequisites
 
 - Node.js 18+
-- An AWS account with [Amazon Bedrock](https://aws.amazon.com/bedrock/) model access enabled (Claude)
+- One model provider:
+  - **Amazon Bedrock** (default): an AWS account with [Bedrock](https://aws.amazon.com/bedrock/) model access enabled (Claude), or
+  - **Ollama** (local, free, offline): see [Running locally with Ollama](#running-locally-with-ollama) below.
 
 ## Getting Started
 
 ```bash
 npm install
 ```
+
+## Running locally with Ollama
+
+By default every agent uses Claude on Amazon Bedrock, which needs an AWS account. If you want to run the workshop fully offline with no cloud account, use [Ollama](https://ollama.com) instead. Each agent file has the Ollama setup already written as a commented-out block at the top. You uncomment it, comment out the Bedrock model, and run.
+
+### 1. Install Ollama
+
+**macOS** — Homebrew, or download the app from [ollama.com/download](https://ollama.com/download):
+
+```bash
+brew install ollama
+```
+
+**Linux** — one-line install script (see [ollama.com/download/linux](https://ollama.com/download/linux)):
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**Windows** — download and run the installer from [ollama.com/download/windows](https://ollama.com/download/windows), then use PowerShell or Command Prompt for the commands below. (If you use WSL2, follow the Linux steps inside your WSL shell instead.)
+
+### 2. Start the server and pull a model
+
+The commands are the same on all three platforms once Ollama is installed. On macOS and Windows the installed app may already run the server in the background; if so, you can skip `ollama serve`.
+
+```bash
+# Start the Ollama server (keep this running in its own terminal)
+ollama serve
+
+# Pull a tool-capable model. The agents call tools, so pick a model
+# that supports tool calling (llama3.1, qwen2.5, mistral-nemo all work).
+ollama pull llama3.1
+```
+
+Ollama listens on `http://localhost:11434` and exposes an OpenAI-compatible API at `http://localhost:11434/v1`. That is what the agents point at.
+
+### 3. Switch an agent to Ollama
+
+Open any agent file (for example `simple-agent/agent.ts`). At the top you'll find a commented Ollama block like this:
+
+```typescript
+// --- Local model with Ollama (uncomment to use) ---
+// import { OpenAIModel } from "@strands-agents/sdk/models/openai";
+//
+// const model = new OpenAIModel({
+//   api: "chat",
+//   modelId: "llama3.1",
+//   apiKey: "ollama", // any non-empty string; Ollama ignores it
+//   clientConfig: { baseURL: "http://localhost:11434/v1" },
+// });
+// ---------------------------------------------------
+```
+
+Uncomment it, then swap the `model:` passed to the `Agent` from the Bedrock model to `model` (the Ollama one). Comment out the Bedrock line so only one model is active.
+
+### Notes
+
+- Tool calling, MCP, and A2A all work through Ollama's OpenAI-compatible endpoint, but quality depends on the local model. `llama3.1` (8B) is a reasonable starting point; larger models follow the strict JSON instructions in the orchestrator more reliably.
+- Local embeddings for the Rules Agent (Hugging Face Transformers.js, `all-MiniLM-L6-v2`) already run on your machine and need no cloud account regardless of which chat model you choose.
+- Keep `ollama serve` running in a separate terminal while you run the agents.
 
 ### 1. Simple Agent
 
@@ -105,7 +167,7 @@ npx tsx a2a-implementation/utils/create_knowledge_base.ts
 ## Tech Stack
 
 - [Strands Agents SDK](https://github.com/strands-agents/sdk-typescript) — agent framework
-- [Amazon Bedrock](https://aws.amazon.com/bedrock/) — LLM provider (Claude)
+- [Amazon Bedrock](https://aws.amazon.com/bedrock/) — default LLM provider (Claude), or [Ollama](https://ollama.com) for local, offline models
 - [Model Context Protocol](https://modelcontextprotocol.io/) — tool interoperability
 - [A2A Protocol](https://github.com/google/A2A) — agent-to-agent communication
 - [LanceDB](https://lancedb.com/) — vector database for RAG

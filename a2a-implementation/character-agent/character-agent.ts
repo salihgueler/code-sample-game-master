@@ -1,6 +1,19 @@
 import { Agent, tool } from "@strands-agents/sdk";
 import { BedrockModel } from "@strands-agents/sdk/models/bedrock";
 import { A2AExpressServer } from "@strands-agents/sdk/a2a/express";
+
+// --- Local model with Ollama (uncomment to use) ---
+// Run `ollama serve` and `ollama pull llama3.1` first. See README.
+// import { OpenAIModel } from "@strands-agents/sdk/models/openai";
+//
+// const ollamaModel = new OpenAIModel({
+//   api: "chat",
+//   modelId: "llama3.1",
+//   apiKey: "ollama", // any non-empty string; Ollama ignores it
+//   clientConfig: { baseURL: "http://localhost:11434/v1" },
+// });
+// Then pass `model: ollamaModel` to the Agent in createAgent() below.
+// ---------------------------------------------------
 import z from "zod";
 import * as fs from "fs";
 import * as path from "path";
@@ -180,6 +193,7 @@ const createAgent = () =>
     model: new BedrockModel({
       modelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
     }),
+    // model: ollamaModel, // <- use this instead to run locally with Ollama
     tools: [findCharacterByName, listAllCharacters, createCharacter],
     // - systemPrompt: SYSTEM_PROMPT
     systemPrompt: SYSTEM_PROMPT,
