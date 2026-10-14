@@ -40,12 +40,27 @@ npm install
 
 By default every agent uses Claude on Amazon Bedrock, which needs an AWS account. If you want to run the workshop fully offline with no cloud account, use [Ollama](https://ollama.com) instead. Each agent file has the Ollama setup already written as a commented-out block at the top. You uncomment it, comment out the Bedrock model, and run.
 
-### 1. Install Ollama and pull a model
+### 1. Install Ollama
+
+**macOS** — Homebrew, or download the app from [ollama.com/download](https://ollama.com/download):
 
 ```bash
-# macOS (Homebrew) — or download from https://ollama.com/download
 brew install ollama
+```
 
+**Linux** — one-line install script (see [ollama.com/download/linux](https://ollama.com/download/linux)):
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**Windows** — download and run the installer from [ollama.com/download/windows](https://ollama.com/download/windows), then use PowerShell or Command Prompt for the commands below. (If you use WSL2, follow the Linux steps inside your WSL shell instead.)
+
+### 2. Start the server and pull a model
+
+The commands are the same on all three platforms once Ollama is installed. On macOS and Windows the installed app may already run the server in the background; if so, you can skip `ollama serve`.
+
+```bash
 # Start the Ollama server (keep this running in its own terminal)
 ollama serve
 
@@ -56,7 +71,7 @@ ollama pull llama3.1
 
 Ollama listens on `http://localhost:11434` and exposes an OpenAI-compatible API at `http://localhost:11434/v1`. That is what the agents point at.
 
-### 2. Switch an agent to Ollama
+### 3. Switch an agent to Ollama
 
 Open any agent file (for example `simple-agent/agent.ts`). At the top you'll find a commented Ollama block like this:
 
