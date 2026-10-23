@@ -15,6 +15,8 @@ import { httpRequest } from "@strands-agents/sdk/vended-tools/http-request";
 // ---------------------------------------------------
 
 const agent = new Agent({
+  systemPrompt:
+    "You are a helpful network crawler to get information and give snarky answers",
   tools: [httpRequest],
   // model, // <- uncomment the Ollama model above and this line to run locally
 });

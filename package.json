@@ -18,6 +18,7 @@
     "@strands-agents/sdk": "^1.19.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "openai": "6.45.0",
     "pdf-parse": "^2.4.5",
     "zod": "^4.3.6"
   },
