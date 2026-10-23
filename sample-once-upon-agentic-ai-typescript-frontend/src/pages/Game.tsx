@@ -32,16 +32,14 @@ export default function Game() {
   );
 
   useEffect(() => {
-    if (!store.serverUrl && !characterName) {
+    if (!characterName) {
       navigate("/");
       return;
     }
-    if (characterName) {
-      fetchUser(store.serverUrl, characterName)
-        .then(setStats)
-        .catch(() => {});
-    }
-  }, [store.serverUrl, characterName, navigate]);
+    fetchUser(characterName)
+      .then(setStats)
+      .catch(() => {});
+  }, [characterName, navigate]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -61,7 +59,7 @@ export default function Game() {
     setInput("");
     setMessages((m) => [...m, { role: "user", text }]);
     try {
-      const out = await sendInquiry(store.serverUrl, text);
+      const out = await sendInquiry(text);
       setMessages((m) => [...m, { role: "assistant", storyOutput: out }]);
     } catch (e) {
       setSendError(e instanceof Error ? e.message : "Failed to send");

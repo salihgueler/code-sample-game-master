@@ -6,13 +6,6 @@ export function validateForm(form: CharacterForm): ValidationErrors {
   if (!form.gender) errors.gender = "Gender is required";
   if (!form.race) errors.race = "Race is required";
   if (!form.characterClass) errors.characterClass = "Class is required";
-  if (
-    form.serverUrl &&
-    !form.serverUrl.startsWith("http://") &&
-    !form.serverUrl.startsWith("https://")
-  ) {
-    errors.serverUrl = "Must start with http:// or https://";
-  }
   return errors;
 }
 

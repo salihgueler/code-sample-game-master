@@ -25,9 +25,10 @@ Opens at http://localhost:5173
 ## Usage
 
 1. Fill in your character details (name, gender, race, class)
-2. Enter the Game Master server URL (default: `http://localhost:8009`)
-3. Click "Start" to create your character and begin the adventure
-4. Chat with the Game Master, click action suggestions, and roll dice
+2. Click "Begin Adventure" to create your character and begin the adventure
+3. Chat with the Game Master, click action suggestions, and roll dice
+
+API requests (`/inquire`, `/user`) are proxied by the Vite dev server to the Game Master backend at `http://localhost:8009` (see `vite.config.ts`).
 
 ## Build
 

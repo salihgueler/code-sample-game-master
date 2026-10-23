@@ -1,15 +1,17 @@
 # 4. A2A (Agent-to-Agent) Orchestration
 
-The final pattern: several specialist agents, each its own A2A server, tied together by a Game Master orchestrator. The orchestrator also reuses the MCP dice server from chapter 3. This is where tools, MCP, RAG, and multi-agent communication come together.
+The final pattern: several specialist agents, each its own A2A server, tied together by a Game Master orchestrator. The orchestrator and the Character Agent both reuse the MCP dice server from chapter 3, so one dice service is shared across agents. This is where tools, MCP, RAG, and multi-agent communication come together.
+
+Each A2A agent runs in its own process with its own tools. The orchestrator's `roll_dice` tool is not available to agents it delegates to, so any agent that needs dice connects to the MCP server itself.
 
 ## The agents
 
-| Folder / file | Port | Role |
-|---|---|---|
-| `rules-agent/rules-agent.ts` | 8000 | D&D rules lookup over RAG. Embeds your query locally (Hugging Face `all-MiniLM-L6-v2`) and searches a LanceDB vector store built from the D&D Basic Rules PDF. |
-| `character-agent/character-agent.ts` | 8001 | Character CRUD. Creates, finds, and lists characters, persisting them to `character-agent/characters.json`. |
+| Folder / file                                          | Port | Role                                                                                                                                                                                  |
+| ------------------------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rules-agent/rules-agent.ts`                           | 8000 | D&D rules lookup over RAG. Embeds your query locally (Hugging Face `all-MiniLM-L6-v2`) and searches a LanceDB vector store built from the D&D Basic Rules PDF.                        |
+| `character-agent/character-agent.ts`                   | 8001 | Character CRUD. Creates, finds, and lists characters, persisting them to `character-agent/characters.json`. Rolls ability scores (4d6 drop lowest) through the MCP dice server.       |
 | `gamemaster-orchestration/gamemaster-orchestration.ts` | 8009 | The orchestrator. Exposes an HTTP API, wraps the two agents above as A2A tools, connects to the MCP dice server, and returns strict JSON responses. The React frontend talks to this. |
-| `utils/create_knowledge_base.ts` | — | One-off script that builds the LanceDB store from `utils/DnD_BasicRules_2018.pdf`. A pre-built store is already committed. |
+| `utils/create_knowledge_base.ts`                       | —    | One-off script that builds the LanceDB store from `utils/DnD_BasicRules_2018.pdf`. A pre-built store is already committed.                                                            |
 
 ## Run it
 

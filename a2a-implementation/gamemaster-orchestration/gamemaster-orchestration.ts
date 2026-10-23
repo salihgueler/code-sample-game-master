@@ -40,11 +40,25 @@ const mcpClient = new McpClient({
 // System prompt for the agent
 const SYSTEM_PROMPT = `You are a D&D Game Master orchestrator with access to specialized agents and tools.
 
-Available agents:
-- Rules Agent (http://127.0.0.1:8000) - For D&D mechanics and rules
-- Character Agent (http://127.0.0.1:8001) - For character creation and management
+Available agents (reach them only through their tools):
+- Rules Agent - call the ask_rules_agent tool. Looks up official D&D 5e Basic Rules with page references.
+- Character Agent - call the ask_character_agent tool. Handles character creation and management.
 
-To communicate with agents, use the A2A protocol.
+Available tools:
+- roll_dice (MCP dice server) - Rolls dice. Pass "faces" (sides per die, e.g. 20 for a d20) and "count" (number of dice).
+  It returns the individual "rolls" and their "total".
+
+Dice rules:
+- Whenever a roll is needed (attacks, checks, saves, damage, random tables), you MUST call roll_dice. Never invent dice results.
+- Every entry in "dices_rolls" must come from an actual roll_dice call made in this turn, using the value it returned.
+- If no dice were rolled this turn, return an empty "dices_rolls" array.
+- Character creation (including ability score rolls) is handled by the Character Agent; do not re-roll its stats yourself.
+
+Rules lookups:
+- Before resolving any player action that involves game mechanics (attacks, spells, skill checks,
+  saving throws, movement, conditions, combat actions), you MUST call ask_rules_agent once with a
+  short question about the relevant rule, and base your ruling on its answer.
+- Mention the rule and page reference returned by ask_rules_agent in "details".
 
 Available D&D dice types:
 - d4 (4-sided die) - Used for damage rolls of small weapons like daggers
@@ -61,7 +75,7 @@ Always respond in JSON format:
     "response": "Your narrative response as Game Master",
     "actions_suggestions": ["Action 1", "Action 2", "Action 3"],
     "details": "Brief summary of tools/agents used",
-    "dices_rolls": [{"dice_type": "d20", "result": 15, "reason": "attack roll"}]
+    "dices_rolls": [{"dice_type": "d20", "result": <total returned by roll_dice>, "reason": "attack roll"}]
 }
 
 Be creative, engaging, and use your available tools to enhance the D&D experience.
@@ -77,7 +91,9 @@ const characterAgent = new A2AAgent({ url: "http://127.0.0.1:8001" });
 // Example:
 const askRulesAgent = tool({
   name: "ask_rules_agent",
-  description: "Ask the Rules Agent about D&D mechanics and rules",
+  description:
+    "Look up the official D&D 5e Basic Rules for a mechanic (attacks, checks, saves, spells, conditions). " +
+    "Call this before resolving any player action that involves game mechanics. Returns a rule summary with page reference.",
   inputSchema: z.object({
     question: z.string().describe("The D&D rules question to ask"),
   }),
@@ -146,6 +162,8 @@ app.post("/inquire", async (req, res) => {
 });
 
 const PORT = 8009;
-app.listen(PORT, () => {
-  console.log(`🏰 D&D Game Master API running on http://localhost:${PORT}`);
+// Bind to loopback only: this API has no authentication and calls a paid model.
+const HOST = "127.0.0.1";
+app.listen(PORT, HOST, () => {
+  console.log(`🏰 D&D Game Master API running on http://${HOST}:${PORT}`);
 });

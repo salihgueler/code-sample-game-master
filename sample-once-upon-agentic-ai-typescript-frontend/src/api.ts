@@ -1,15 +1,7 @@
 import type { StoryOutput, CharacterStats } from "./types";
 
-function baseUrl(serverUrl: string) {
-  if (!serverUrl) return "";
-  return serverUrl.replace(/\/+$/, "");
-}
-
-export async function sendInquiry(
-  serverUrl: string,
-  question: string,
-): Promise<StoryOutput> {
-  const res = await fetch(`${baseUrl(serverUrl)}/inquire`, {
+export async function sendInquiry(question: string): Promise<StoryOutput> {
+  const res = await fetch("/inquire", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
@@ -28,11 +20,8 @@ export async function sendInquiry(
   return raw as StoryOutput;
 }
 
-export async function fetchUser(
-  serverUrl: string,
-  userName: string,
-): Promise<CharacterStats> {
-  const res = await fetch(`${baseUrl(serverUrl)}/user/${userName}`);
+export async function fetchUser(userName: string): Promise<CharacterStats> {
+  const res = await fetch(`/user/${userName}`);
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
   return (await res.json()) as CharacterStats;
 }

@@ -20,7 +20,6 @@ export default function NewGame() {
     gender: "",
     race: "",
     characterClass: "",
-    serverUrl: store.serverUrl || "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState(false);
@@ -58,13 +57,10 @@ export default function NewGame() {
     }, 2500);
 
     try {
-      const response = await sendInquiry(
-        form.serverUrl,
-        formatInitPrompt(form),
-      );
+      const response = await sendInquiry(formatInitPrompt(form));
       clearInterval(interval);
       setLoadingPhase("✨ Your adventure begins!");
-      store.setConnection(form.serverUrl, form.name, response);
+      store.setCharacter(form.name, response);
       await new Promise((r) => setTimeout(r, 600));
       navigate(`/game/${form.name}`);
     } catch (err) {
@@ -127,16 +123,6 @@ export default function NewGame() {
           {field("gender", "Gender", "gender", GENDERS)}
           {field("race", "Race", "race", RACES)}
           {field("class", "Class", "characterClass", CLASSES)}
-          <div className="form-divider">
-            <span>Connection</span>
-          </div>
-          {field(
-            "url",
-            "Server URL",
-            "serverUrl",
-            undefined,
-            "Leave empty for local proxy",
-          )}
           <button type="submit" className="start-button" disabled={loading}>
             {loading ? loadingPhase : "Begin Adventure"}
           </button>

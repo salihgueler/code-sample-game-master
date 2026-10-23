@@ -12,10 +12,24 @@ function createServer(): McpServer {
   server.registerTool(
     "roll_dice",
     {
-      description: "Roll dice for D&D",
+      description:
+        "Roll D&D dice. 'faces' is the number of sides per die (d4=4, d6=6, d8=8, d10=10, d12=12, d20=20, d100=100) " +
+        "and 'count' is how many dice to roll (e.g. 4d6 is faces=6, count=4). " +
+        "Returns the individual rolls and their total. Always use this instead of inventing dice results.",
       inputSchema: {
-        faces: z.number().default(6),
-        count: z.number().default(1),
+        faces: z
+          .number()
+          .int()
+          .min(2)
+          .default(6)
+          .describe("Sides per die, e.g. 20 for a d20"),
+        count: z
+          .number()
+          .int()
+          .min(1)
+          .max(100)
+          .default(1)
+          .describe("Number of dice to roll"),
       },
     },
     async ({ faces, count }) => {
@@ -60,8 +74,10 @@ app.delete("/mcp", async (_req, res) => {
   res.status(405).json({ error: "Method not allowed" });
 });
 
-app.listen(PORT, () => {
+// Bind to loopback only: this MCP server has no authentication.
+const HOST = "127.0.0.1";
+app.listen(PORT, HOST, () => {
   console.log(
-    `🎲 D&D Dice Roll MCP Server running on http://localhost:${PORT}/mcp`,
+    `🎲 D&D Dice Roll MCP Server running on http://${HOST}:${PORT}/mcp`,
   );
 });

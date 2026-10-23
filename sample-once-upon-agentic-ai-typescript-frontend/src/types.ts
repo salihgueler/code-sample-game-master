@@ -3,7 +3,6 @@ export interface CharacterForm {
   gender: string;
   race: string;
   characterClass: string;
-  serverUrl: string;
 }
 
 export interface ValidationErrors {
@@ -11,7 +10,6 @@ export interface ValidationErrors {
   gender?: string;
   race?: string;
   characterClass?: string;
-  serverUrl?: string;
 }
 
 export interface DiceRoll {
